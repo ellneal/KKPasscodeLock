@@ -18,6 +18,6 @@
 #import <UIKit/UIKit.h>
 #import "KKPasscodeSettingsViewController.h"
 
-@interface SettingsViewController : UITableViewController <KKPasscodeSettingsViewControllerDelegate>
+@interface SettingsViewController : UITableViewController <KKPasscodeSettingsViewControllerDelegate, KKPasscodeViewControllerDelegate>
 
 @end

@@ -29,6 +29,12 @@
   [self dismissModalViewControllerAnimated:YES];
 }
 
+- (void)showSettingsAnimated:(BOOL)animated {
+  KKPasscodeSettingsViewController *vc = [[[KKPasscodeSettingsViewController alloc] initWithStyle:UITableViewStyleGrouped] autorelease];
+  vc.delegate = self;
+  [self.navigationController pushViewController:vc animated:animated];
+}
+
 #pragma mark - View lifecycle
 
 - (void)viewDidLoad {
@@ -81,15 +87,29 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
   if (indexPath.section == 0) {
-    KKPasscodeSettingsViewController *vc = [[[KKPasscodeSettingsViewController alloc] initWithStyle:UITableViewStyleGrouped] autorelease];
-    vc.delegate = self;
-    [self.navigationController pushViewController:vc animated:YES];
+      
+    if ([[KKPasscodeLock sharedLock] isPasscodeRequired]) {
+      KKPasscodeViewController *viewController = [[KKPasscodeViewController alloc] initWithNibName:nil bundle:nil];
+      viewController.mode = KKPasscodeModeEnterWithCancel;
+      viewController.delegate = self;
+        
+      UINavigationController *navigationController = [[[UINavigationController alloc] initWithRootViewController:viewController] autorelease];
+      [self presentModalViewController:navigationController animated:YES];
+    } else {
+      [self showSettingsAnimated:YES];
+    }
   } 
 }
 
 - (void)didSettingsChanged:(KKPasscodeSettingsViewController*)viewController
 {
   [self.tableView reloadData];
+}
+
+- (void)didPasscodeEnteredCorrectly:(KKPasscodeViewController *)viewController
+{
+  [self showSettingsAnimated:NO];
+  [self dismissModalViewControllerAnimated:YES];
 }
 
 @end
