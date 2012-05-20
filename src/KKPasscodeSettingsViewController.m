@@ -95,15 +95,18 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
 	if ([[KKPasscodeLock sharedLock] eraseOption]) {
-		return 3;
+		return 2;
 	}
 	
-	return 2;
+	return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-	return 1;
+	if (section == 0)
+        return 2;
+    
+    return 1;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
@@ -131,20 +134,22 @@
 
 	
 	if (indexPath.section == 0) {
-		cell.textLabel.textAlignment = UITextAlignmentCenter;
-		if (_passcodeLockOn) {
-			cell.textLabel.text = @"Turn Passcode Off";
-		} else {
-			cell.textLabel.text = @"Turn Passcode On";
-		}
+        if (indexPath.row == 0) {
+            cell.textLabel.textAlignment = UITextAlignmentCenter;
+            if (_passcodeLockOn) {
+                cell.textLabel.text = @"Turn Passcode Off";
+            } else {
+                cell.textLabel.text = @"Turn Passcode On";
+            }
+        } else if (indexPath.row == 1) {
+            cell.textLabel.text = @"Change Passcode";
+            cell.textLabel.textAlignment = UITextAlignmentCenter;
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            if (!_passcodeLockOn) {
+                cell.textLabel.textColor = [UIColor grayColor];
+            }
+        }
 	} else if (indexPath.section == 1) {
-		cell.textLabel.text = @"Change Passcode";
-		cell.textLabel.textAlignment = UITextAlignmentCenter;
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-		if (!_passcodeLockOn) {
-			cell.textLabel.textColor = [UIColor grayColor];
-		}
-	} else if (indexPath.section == 2) {
 		cell.textLabel.text = @"Erase Data";
 		cell.accessoryView = _eraseDataSwitch;
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
