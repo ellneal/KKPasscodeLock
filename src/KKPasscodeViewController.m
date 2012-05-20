@@ -99,7 +99,7 @@
 	_textFields = [[NSMutableArray alloc] init];
 	_boxes = [[NSMutableArray alloc] init];
 	
-	if (_mode == KKPasscodeModeSet || _mode == KKPasscodeModeChange) {
+	if (_mode == KKPasscodeModeSet || _mode == KKPasscodeModeChange || _mode == KKPasscodeModeEnterWithCancel) {
 		if (_passcodeLockOn) {
 			_enterPasscodeTableView.tableHeaderView = [self headerViewForTextField:_enterPasscodeTextField];
 			[_tableViews addObject:_enterPasscodeTableView];
@@ -553,6 +553,12 @@
 	} else {
 		self.navigationItem.title = @"Enter Passcode";
 		headerLabel.text = @"Enter your passcode";
+        
+        if (_mode == KKPasscodeModeEnterWithCancel) {
+            UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed:)];
+            self.navigationItem.leftBarButtonItem = cancel;
+            [cancel release];
+        }
 	}
 	headerLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin;
 	
@@ -657,7 +663,7 @@
       } else { 
         [self incrementFailedAttemptsLabel];
       }
-    } else if (_mode == KKPasscodeModeEnter) {
+    } else if (_mode == KKPasscodeModeEnter || _mode == KKPasscodeModeEnterWithCancel) {
       NSString *passcode = [KKKeychain getStringForKey:@"passcode"];
       if ([_enterPasscodeTextField.text isEqualToString:passcode]) {
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {

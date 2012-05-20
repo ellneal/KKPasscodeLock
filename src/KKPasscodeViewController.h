@@ -47,7 +47,14 @@ enum {
    * Changes an existing passcode. This allows the user to change the passcode by 
    * entering the existing passcode, followed by a new passcode
    */
-	KKPasscodeModeChange = 3
+	KKPasscodeModeChange = 3,
+    
+  /**
+   * Displays the passcode enter view, but allows the user to cancel.
+   * Can be used before displaying the passcode settings.
+   */
+    
+    KKPasscodeModeEnterWithCancel = 4
 };
 typedef NSUInteger KKPasscodeMode;
 
